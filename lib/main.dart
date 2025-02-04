@@ -21,12 +21,12 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late String selectedDate;
+  DateTime? dateTime;
 
   @override
   void initState() {
     super.initState();
-    selectedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+    dateTime = DateTime.now();
   }
 
   @override
@@ -39,8 +39,26 @@ class _MyAppState extends State<MyApp> {
       ),
       home: BlocProvider(
         create: (context) =>
-            SportBloc(SportRepository())..add(FetchSports(selectedDate)),
-        child: const SportScreen(),
+            SportBloc(SportRepository())..add(FetchSports(DateFormat('yyyy-MM-dd').format(DateTime.now()))),
+        child: BlocListener<SportBloc, SportState>(
+          listener: (context, state) {
+            if (state is ShowDatePickerState) {
+              showDatePicker(
+                context: context,
+                initialDate: dateTime!,
+                firstDate: DateTime(2024),
+                lastDate: DateTime(2101),
+              ).then((picked) {
+                if (picked != null) {
+                  dateTime = picked;
+                  final selectedDate = DateFormat('yyyy-MM-dd').format(picked);
+                  context.read<SportBloc>().add(FetchSports(selectedDate));
+                }
+              });
+            }
+          },
+          child: const SportScreen(),
+        ),
       ),
     );
   }
@@ -57,17 +75,8 @@ class SportScreen extends StatelessWidget {
         backgroundColor: Colors.blue,
         actions: [
           ElevatedButton(
-            onPressed: () async {
-              final DateTime? picked = await showDatePicker(
-                context: context,
-                initialDate: DateTime.now(),
-                firstDate: DateTime(2024),
-                lastDate: DateTime(2101),
-              );
-              if (picked != null) {
-                final selectedDate = DateFormat('yyyy-MM-dd').format(picked);
-                context.read<SportBloc>().add(FetchSports(selectedDate));
-              }
+            onPressed: () {
+              context.read<SportBloc>().add(const ShowDatePicker());
             },
             child: BlocBuilder<SportBloc, SportState>(
               builder: (context, state) {

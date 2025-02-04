@@ -35,5 +35,9 @@ class SportBloc extends Bloc<SportEvent, SportState> {
         emit(SportError(e.toString()));
       }
     });
+
+    on<ShowDatePicker>((event, emit) {
+      emit(ShowDatePickerState());
+    });
   }
 }
