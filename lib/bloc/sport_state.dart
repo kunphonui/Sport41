@@ -16,8 +16,9 @@ class SportLoading extends SportState {}
 class SportLoaded extends SportState {
   final List<SportMatch> sports;
   final String matchDate;
+  final String matchLanguage;
 
-  const SportLoaded(this.sports, this.matchDate);
+  const SportLoaded(this.sports, this.matchDate, this.matchLanguage);
 
   @override
   List<Object> get props => [sports, matchDate];
@@ -41,4 +42,8 @@ class MatchUpdated extends SportState {
   List<Object> get props => [matchId];
 }
 
-class ShowDatePickerState extends SportState {}
+class ShowDatePickerState extends SportState {
+  final String matchLanguage;
+
+  const ShowDatePickerState({this.matchLanguage = "NBA"});
+}

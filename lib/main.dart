@@ -38,8 +38,9 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
       ),
       home: BlocProvider(
-        create: (context) =>
-            SportBloc(SportRepository())..add(FetchSports(DateFormat('yyyy-MM-dd').format(DateTime.now()))),
+        create: (context) => SportBloc(SportRepository())
+          ..add(FetchSports(DateFormat('yyyy-MM-dd').format(DateTime.now()),
+              matchLeague: "NBA")),
         child: BlocListener<SportBloc, SportState>(
           listener: (context, state) {
             if (state is ShowDatePickerState) {
@@ -52,7 +53,8 @@ class _MyAppState extends State<MyApp> {
                 if (picked != null) {
                   dateTime = picked;
                   final selectedDate = DateFormat('yyyy-MM-dd').format(picked);
-                  context.read<SportBloc>().add(FetchSports(selectedDate));
+                  context.read<SportBloc>().add(FetchSports(selectedDate,
+                      matchLeague: state.matchLanguage));
                 }
               });
             }
@@ -71,38 +73,86 @@ class SportScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('SportTensor'),
         backgroundColor: Colors.blue,
         actions: [
-          ElevatedButton(
-            onPressed: () {
-              context.read<SportBloc>().add(const ShowDatePicker());
-            },
-            child: BlocBuilder<SportBloc, SportState>(
-              builder: (context, state) {
-                if (state is SportLoaded) {
-                  return Text(
-                    state.matchDate,
-                    style: const TextStyle(
-                        color: Colors.red,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold),
-                  );
-                }
-                return const Text(
-                  'Select Date',
-                  style: TextStyle(
+          BlocBuilder<SportBloc, SportState>(builder: (context, state) {
+            if (state is SportLoaded) {
+              return ElevatedButton(
+                onPressed: () {
+                  context
+                      .read<SportBloc>()
+                      .add(ShowDatePicker(state.matchLanguage));
+                },
+                child: Text(
+                  state.matchDate,
+                  style: const TextStyle(
                       color: Colors.red,
                       fontSize: 16,
                       fontWeight: FontWeight.bold),
+                ),
+              );
+            }
+
+            return const Text("Loading...");
+          }),
+          const SizedBox(width: 10),
+          BlocBuilder<SportBloc, SportState>(
+            builder: (context, state) {
+              if (state is SportLoaded) {
+                return Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: DropdownButton<String>(
+                    value: state.matchLanguage,
+                    padding: const EdgeInsets.all(0),
+                    borderRadius: BorderRadius.circular(20),
+                    underline: Container(),
+                    items: <String>['NBA', 'NFL', 'MLB', 'NHL']
+                        .map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(_getLeagueName(value),
+                            style: const TextStyle(
+                                color: Colors.red,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold)),
+                      );
+                    }).toList(),
+                    onChanged: (String? value) {
+                      if (value != null) {
+                        context.read<SportBloc>().add(
+                            FetchSports(state.matchDate, matchLeague: value));
+                      }
+                    },
+                  ),
                 );
-              },
-            ),
+              }
+              return const Text("Loading...");
+            },
           ),
+          const SizedBox(width: 10),
         ],
       ),
       body: const SportList(),
     );
+  }
+
+  String _getLeagueName(String league) {
+    switch (league) {
+      case 'NBA':
+        return 'Basketball';
+      case 'NFL':
+        return 'Football';
+      case 'MLB':
+        return 'Baseball';
+      case 'NHL':
+        return 'Hockey';
+      default:
+        return '';
+    }
   }
 }
 
@@ -115,10 +165,11 @@ class SportList extends StatelessWidget {
       builder: (context, state) {
         if (state is SportLoading) {
           return const Center(child: CircularProgressIndicator());
-        } else if (state is SportLoaded) {
+        } else if (state is SportLoaded && state.sports.isNotEmpty) {
           return RefreshIndicator(
               onRefresh: () async {
-                context.read<SportBloc>().add(FetchSports(state.matchDate));
+                context.read<SportBloc>().add(FetchSports(state.matchDate,
+                    matchLeague: state.matchLanguage));
               },
               child: ListView.builder(
                 itemCount: state.sports.length,
@@ -196,9 +247,9 @@ class SportList extends StatelessWidget {
                         );
 
                         if (onBack != null && onBack) {
-                          context
-                              .read<SportBloc>()
-                              .add(FetchSports(state.matchDate));
+                          context.read<SportBloc>().add(FetchSports(
+                              state.matchDate,
+                              matchLeague: state.matchLanguage));
                         }
                       },
                     ),

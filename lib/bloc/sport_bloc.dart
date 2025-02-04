@@ -14,9 +14,10 @@ class SportBloc extends Bloc<SportEvent, SportState> {
       try {
         final sports = await sportRepository.fetchSports(event.matchDate,
             matchLeague: event.matchLeague);
-        emit(SportLoaded(sports, event.matchDate));
+        emit(SportLoaded(sports, event.matchDate, event.matchLeague));
       } catch (e) {
-        emit(SportError(e.toString()));
+        emit(SportLoaded(const [], event.matchDate, event.matchLeague));
+        // emit(SportError(e.toString()));
       }
     });
 
@@ -37,7 +38,7 @@ class SportBloc extends Bloc<SportEvent, SportState> {
     });
 
     on<ShowDatePicker>((event, emit) {
-      emit(ShowDatePickerState());
+      emit(ShowDatePickerState(matchLanguage: event.matchLanguage));
     });
   }
 }

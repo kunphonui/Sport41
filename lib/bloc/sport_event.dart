@@ -34,9 +34,12 @@ class UpdateMatch extends SportEvent {
   });
 
   @override
-  List<Object?> get props => [matchId, homeTeamOdds, awayTeamOdds, drawOdds, predictedWinner];
+  List<Object?> get props =>
+      [matchId, homeTeamOdds, awayTeamOdds, drawOdds, predictedWinner];
 }
 
 class ShowDatePicker extends SportEvent {
-  const ShowDatePicker();
+  final String matchLanguage;
+
+  const ShowDatePicker(this.matchLanguage);
 }
