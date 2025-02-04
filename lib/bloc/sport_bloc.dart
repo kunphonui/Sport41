@@ -1,8 +1,9 @@
 // lib/bloc/sport_bloc.dart
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../repositories/sport_repository.dart';
 import 'sport_event.dart';
 import 'sport_state.dart';
-import '../repositories/sport_repository.dart';
 
 class SportBloc extends Bloc<SportEvent, SportState> {
   final SportRepository sportRepository;
@@ -11,8 +12,9 @@ class SportBloc extends Bloc<SportEvent, SportState> {
     on<FetchSports>((event, emit) async {
       emit(SportLoading());
       try {
-        final sports = await sportRepository.fetchSports(event.matchDate, matchLeague: event.matchLeague);
-        emit(SportLoaded(sports));
+        final sports = await sportRepository.fetchSports(event.matchDate,
+            matchLeague: event.matchLeague);
+        emit(SportLoaded(sports, event.matchDate));
       } catch (e) {
         emit(SportError(e.toString()));
       }

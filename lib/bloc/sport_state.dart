@@ -15,11 +15,12 @@ class SportLoading extends SportState {}
 
 class SportLoaded extends SportState {
   final List<SportMatch> sports;
+  final String matchDate;
 
-  const SportLoaded(this.sports);
+  const SportLoaded(this.sports, this.matchDate);
 
   @override
-  List<Object> get props => [sports];
+  List<Object> get props => [sports, matchDate];
 }
 
 class SportError extends SportState {
