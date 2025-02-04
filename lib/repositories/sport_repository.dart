@@ -13,6 +13,7 @@ class SportRepository {
 
     if (response.statusCode == 200) {
       List jsonResponse = json.decode(response.body);
+      // print(jsonResponse);
       return jsonResponse.map((sport) => SportMatch.fromJson(sport)).toList();
     } else {
       throw Exception('Failed to load sports');
