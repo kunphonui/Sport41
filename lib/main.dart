@@ -42,6 +42,7 @@ class _MyAppState extends State<MyApp> {
           ..add(FetchSports(DateFormat('yyyy-MM-dd').format(DateTime.now()),
               matchLeague: "NBA")),
         child: BlocListener<SportBloc, SportState>(
+          listenWhen: (previous, current) => current is ShowDatePickerState,
           listener: (context, state) {
             if (state is ShowDatePickerState) {
               showDatePicker(
@@ -54,6 +55,10 @@ class _MyAppState extends State<MyApp> {
                   dateTime = picked;
                   final selectedDate = DateFormat('yyyy-MM-dd').format(picked);
                   context.read<SportBloc>().add(FetchSports(selectedDate,
+                      matchLeague: state.matchLanguage));
+                } else {
+                  context.read<SportBloc>().add(FetchSports(
+                      DateFormat('yyyy-MM-dd').format(dateTime ?? DateTime.now()),
                       matchLeague: state.matchLanguage));
                 }
               });
@@ -75,28 +80,31 @@ class SportScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.blue,
         actions: [
-          BlocBuilder<SportBloc, SportState>(builder: (context, state) {
-            if (state is SportLoaded) {
-              return ElevatedButton(
-                onPressed: () {
-                  context
-                      .read<SportBloc>()
-                      .add(ShowDatePicker(state.matchLanguage));
-                },
-                child: Text(
-                  state.matchDate,
-                  style: const TextStyle(
-                      color: Colors.red,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold),
-                ),
-              );
-            }
+          BlocBuilder<SportBloc, SportState>(
+              buildWhen: (previous, current) => current is SportLoaded,
+              builder: (context, state) {
+                if (state is SportLoaded) {
+                  return ElevatedButton(
+                    onPressed: () {
+                      context
+                          .read<SportBloc>()
+                          .add(ShowDatePicker(state.matchLanguage));
+                    },
+                    child: Text(
+                      state.matchDate,
+                      style: const TextStyle(
+                          color: Colors.red,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  );
+                }
 
-            return const Text("Loading...");
-          }),
+                return const Text("Loading...");
+              }),
           const SizedBox(width: 10),
           BlocBuilder<SportBloc, SportState>(
+            buildWhen: (previous, current) => current is SportLoaded,
             builder: (context, state) {
               if (state is SportLoaded) {
                 return Container(
@@ -162,6 +170,8 @@ class SportList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SportBloc, SportState>(
+      buildWhen: (previous, current) =>
+          current is SportLoaded || current is SportError,
       builder: (context, state) {
         if (state is SportLoading) {
           return const Center(child: CircularProgressIndicator());
