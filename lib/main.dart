@@ -42,7 +42,6 @@ class _MyAppState extends State<MyApp> {
           ..add(FetchSports(DateFormat('yyyy-MM-dd').format(DateTime.now()),
               matchLeague: "NBA")),
         child: BlocListener<SportBloc, SportState>(
-          listenWhen: (previous, current) => current is ShowDatePickerState,
           listener: (context, state) {
             if (state is ShowDatePickerState) {
               showDatePicker(
@@ -58,10 +57,22 @@ class _MyAppState extends State<MyApp> {
                       matchLeague: state.matchLanguage));
                 } else {
                   context.read<SportBloc>().add(FetchSports(
-                      DateFormat('yyyy-MM-dd').format(dateTime ?? DateTime.now()),
+                      DateFormat('yyyy-MM-dd')
+                          .format(dateTime ?? DateTime.now()),
                       matchLeague: state.matchLanguage));
                 }
               });
+            } else if (state is UpdateAllMatchesSuccess) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                    content: Text('All matches updated successfully')),
+              );
+            } else if (state is UpdateAllMatchesFailure) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                    content:
+                        Text('Failed to update all matches: ${state.message}')),
+              );
             }
           },
           child: const SportScreen(),
@@ -142,6 +153,13 @@ class SportScreen extends StatelessWidget {
             },
           ),
           const SizedBox(width: 10),
+          CircularIconButton(
+            icon: Icons.update,
+            onPressed: () {
+              context.read<SportBloc>().add(UpdateAllMatches());
+            },
+          ),
+          const SizedBox(width: 30),
         ],
       ),
       body: const SportList(),
@@ -272,6 +290,28 @@ class SportList extends StatelessWidget {
           return const Center(child: Text('No sports found'));
         }
       },
+    );
+  }
+}
+
+class CircularIconButton extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback onPressed;
+
+  const CircularIconButton({
+    super.key,
+    required this.icon,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return CircleAvatar(
+      backgroundColor: Colors.white, // Set the background color
+      child: IconButton(
+        icon: Icon(icon, color: Colors.blue), // Set the icon color
+        onPressed: onPressed,
+      ),
     );
   }
 }

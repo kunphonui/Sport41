@@ -43,3 +43,5 @@ class ShowDatePicker extends SportEvent {
 
   const ShowDatePicker(this.matchLanguage);
 }
+
+class UpdateAllMatches extends SportEvent {}

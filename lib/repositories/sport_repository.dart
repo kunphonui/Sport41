@@ -4,12 +4,12 @@ import 'package:http/http.dart' as http;
 import '../models/sport_match.dart';
 
 class SportRepository {
-  final String apiUrl = 'http://92.43.29.102:20230/get_data';
+  final String baseUrl = 'http://92.43.29.102:20230';
 
   Future<List<SportMatch>> fetchSports(String matchDate,
       {String matchLeague = "NBA"}) async {
     final response = await http.get(
-        Uri.parse('$apiUrl?matchDate=$matchDate&matchLeague=$matchLeague'));
+        Uri.parse('$baseUrl/get_data?matchDate=$matchDate&matchLeague=$matchLeague'));
 
     if (response.statusCode == 200) {
       List jsonResponse = json.decode(response.body);
@@ -26,7 +26,7 @@ class SportRepository {
       double? drawOdds,
       String? predictedWinner}) async {
     final response = await http.post(
-      Uri.parse('http://92.43.29.102:20230/update_data'),
+      Uri.parse('$baseUrl/update_data'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'matchId': matchId,
@@ -39,6 +39,16 @@ class SportRepository {
 
     if (response.statusCode != 200) {
       throw Exception('Failed to update match');
+    }
+  }
+
+  Future<void> updateAllMatches() async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/update_all_matches'),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to update all matches');
     }
   }
 }

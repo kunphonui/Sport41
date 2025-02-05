@@ -40,5 +40,15 @@ class SportBloc extends Bloc<SportEvent, SportState> {
     on<ShowDatePicker>((event, emit) {
       emit(ShowDatePickerState(matchLanguage: event.matchLanguage));
     });
+
+    on<UpdateAllMatches>((event, emit) async {
+      try {
+        await sportRepository.updateAllMatches();
+        emit(UpdateAllMatchesSuccess());
+      } catch (e) {
+        emit(UpdateAllMatchesFailure(e.toString()));
+      }
+    });
   }
+
 }
