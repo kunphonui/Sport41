@@ -19,16 +19,11 @@ class SportBloc extends Bloc<SportEvent, SportState> {
         final sports = await sportRepository.fetchSports(event.matchDate,
             matchLeague: matchLeague);
 
-        print("====> load match success: ${sports.length}");
-        if (sports.isNotEmpty) {
-          emit(SportLoaded(sports, event.matchDate, event.matchLeague));
-        } else {
-           emit(SportError("Data empty"));
-        }
+        emit(SportLoaded(sports, event.matchDate, event.matchLeague));
       } catch (e) {
-        print("====> error load match: ${e.toString()}");
-        // emit(SportLoaded(const [], event.matchDate, event.matchLeague));
-        emit(SportError(e.toString()));
+        // print("====> error load match: ${e.toString()}");
+        emit(SportLoaded(const [], event.matchDate, event.matchLeague));
+        // emit(SportError(e.toString()));
       }
     });
 

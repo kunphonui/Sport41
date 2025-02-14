@@ -112,6 +112,10 @@ class _UpdateMatchScreenState extends State<UpdateMatchScreen> {
                     value: 'Away team',
                     child: Text('Away team'),
                   ),
+                  DropdownMenuItem(
+                    value: 'Draw',
+                    child: Text('Draw'),
+                  ),
                 ],
                 onChanged: (value) {
                   setState(() {
