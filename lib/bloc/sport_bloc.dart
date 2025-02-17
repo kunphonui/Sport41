@@ -13,7 +13,7 @@ class SportBloc extends Bloc<SportEvent, SportState> {
       emit(SportLoading());
       try {
         String matchLeague = event.matchLeague;
-        if (matchLeague == 'NFL') {
+        if (matchLeague == 'EPL') {
           matchLeague = 'English Premier League';
         }
         final sports = await sportRepository.fetchSports(event.matchDate,

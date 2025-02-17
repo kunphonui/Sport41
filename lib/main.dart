@@ -129,8 +129,13 @@ class SportScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(0),
                     borderRadius: BorderRadius.circular(20),
                     underline: Container(),
-                    items: <String>['NBA', 'NFL', 'MLB', 'NHL']
-                        .map((String value) {
+                    items: <String>[
+                      'NBA',
+                      'EPL',
+                      'NFL',
+                      'MLB',
+                      'NHL',
+                    ].map((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
                         child: Text(_getLeagueName(value),
@@ -170,6 +175,8 @@ class SportScreen extends StatelessWidget {
     switch (league) {
       case 'NBA':
         return 'Basketball';
+      case 'EPL':
+        return 'Soccer';
       case 'NFL':
         return 'Football';
       case 'MLB':
