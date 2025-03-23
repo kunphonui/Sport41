@@ -2,20 +2,18 @@
 import 'package:equatable/equatable.dart';
 
 abstract class SportEvent extends Equatable {
-  const SportEvent();
+  SportEvent();
 
+  final initialTime = DateTime.now();
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [initialTime];
 }
 
 class FetchSports extends SportEvent {
   final String matchDate;
   final String matchLeague;
 
-  const FetchSports(this.matchDate, {this.matchLeague = "NBA"});
-
-  @override
-  List<Object> get props => [matchDate, matchLeague];
+  FetchSports(this.matchDate, {this.matchLeague = "NBA"});
 }
 
 class UpdateMatch extends SportEvent {
@@ -25,7 +23,7 @@ class UpdateMatch extends SportEvent {
   final double? drawOdds;
   final String? predictedWinner;
 
-  const UpdateMatch({
+  UpdateMatch({
     required this.matchId,
     this.homeTeamOdds,
     this.awayTeamOdds,
@@ -33,15 +31,12 @@ class UpdateMatch extends SportEvent {
     this.predictedWinner,
   });
 
-  @override
-  List<Object?> get props =>
-      [matchId, homeTeamOdds, awayTeamOdds, drawOdds, predictedWinner];
 }
 
 class ShowDatePicker extends SportEvent {
   final String matchLanguage;
 
-  const ShowDatePicker(this.matchLanguage);
+  ShowDatePicker(this.matchLanguage);
 }
 
 class UpdateAllMatches extends SportEvent {}

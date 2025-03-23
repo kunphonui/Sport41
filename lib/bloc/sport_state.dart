@@ -1,4 +1,4 @@
-// lib/bloc/sport_state.dart
+// lib/bloc/trade_state.dart
 import 'package:equatable/equatable.dart';
 import '../models/sport_match.dart';
 
