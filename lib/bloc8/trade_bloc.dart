@@ -12,15 +12,13 @@ class TradeBloc extends Bloc<TradeEvent, TradeState> {
     on<UpdateTrade>((event, emit) async {
       emit(TradeLoading());
       try {
-        print('====> Updating trade');
-        await tradeRepository.updateTrade(
+        final response  = await tradeRepository.updateTrade(
           coinName: event.coinName,
           leverage: event.leverage,
           orderType: event.orderType,
         );
-        print('====> Trade updated');
+        emit(UpdatedTrade(response ?? ''));
       } catch (e) {
-        print('====> error update trade: ${e.toString()}');
         emit(TradeError(e.toString()));
       }
     });

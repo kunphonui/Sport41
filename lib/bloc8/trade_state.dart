@@ -21,7 +21,7 @@ class TradeError extends TradeState {
 }
 
 class UpdatedTrade extends TradeState {
-  final String matchId;
+  final String content;
 
-  UpdatedTrade(this.matchId);
+  UpdatedTrade(this.content);
 }

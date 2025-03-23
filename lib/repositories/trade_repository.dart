@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 class TradeRepository {
   final String baseUrl = 'http://188.242.219.244:61753';
 
-  Future<void> updateTrade({
+  Future<String?> updateTrade({
     required String coinName,
     required String orderType,
     required double leverage,
@@ -31,9 +31,10 @@ class TradeRepository {
       body: jsonEncode(body),
     );
     print("====> response: ${response.body}");
-
-    if (response.statusCode != 200) {
-      throw Exception('Failed to update match');
+    if (response.statusCode == 200) {
+      return response.body;
+    } else {
+      throw Exception('Failed to update trade');
     }
   }
 }

@@ -14,13 +14,27 @@ class Subnet8View extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
         create: (context) => TradeBloc(TradeRepository()),
-        child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.blue,
-            actions: [],
-          ),
-          body: const TradeCoinScreen(),
-        ));
+        child: BlocListener<TradeBloc, TradeState>(
+            listener: (context, state) {
+              if (state is TradeError) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(state.message)),
+                );
+                return;
+              }
+              if (state is UpdatedTrade) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(state.content)),
+                );
+              }
+            },
+            child: Scaffold(
+              appBar: AppBar(
+                backgroundColor: Colors.blue,
+                actions: [],
+              ),
+              body: const TradeCoinScreen(),
+            )));
   }
 }
 
