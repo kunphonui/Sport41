@@ -48,7 +48,7 @@ class TradeCoinScreen extends StatefulWidget {
 class _MyAppState extends State<TradeCoinScreen> {
   final _formKey = GlobalKey<FormState>();
   final _coins = ["BTC", "ETH", "SOL", "XRP", "DOGE"];
-  final _leverages = [0.1, 0.2, 0.3, 0.4, 0.5];
+  final _leverages = [0.01, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5];
   var _chooseCoin = "BTC";
   var _chooseLeverage = 0.1;
 
@@ -156,6 +156,32 @@ class _MyAppState extends State<TradeCoinScreen> {
                     ),
                     child: const Text(
                       'SHORT',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState?.validate() ?? false) {
+                        _formKey.currentState?.save();
+                      }
+                      context.read<TradeBloc>().add(UpdateTrade(
+                            coinName: _chooseCoin,
+                            leverage: _chooseLeverage,
+                            orderType: 'FLAT',
+                          ));
+                    },
+                    style: ElevatedButton.styleFrom(
+                      textStyle: const TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold),
+                      backgroundColor: Colors.amber, // Background color
+                    ),
+                    child: const Text(
+                      'FLAT',
                       style: TextStyle(
                         color: Colors.white,
                       ),
