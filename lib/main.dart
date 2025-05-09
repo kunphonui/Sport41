@@ -6,6 +6,7 @@ import 'package:sportapp/views/subnet_8_view.dart';
 void main() {
   runApp(const MyApp());
 }
+// pm2 start "python3 -m http.server 62013 --bind 0.0.0.0" --name flutter-web
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});

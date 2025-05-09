@@ -4,7 +4,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class TradeRepository {
-  final String baseUrl = 'http://188.242.219.244:61753';
+  // final String baseUrl = 'http://188.242.219.244:61753';
+  final String baseUrl = 'http://178.164.41.219:40697';
 
   Future<String?> updateTrade({
     required String coinName,

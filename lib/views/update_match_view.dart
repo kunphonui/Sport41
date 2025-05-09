@@ -163,6 +163,13 @@ class _UpdateMatchScreenState extends State<UpdateMatchScreen> {
                   child: const Text('Open GPT'),
                 ),
               ),
+              const SizedBox(height: 20),
+              Center(
+                child: ElevatedButton(
+                  onPressed: _copyTeamDetailsToClipboard,
+                  child: const Text('Copy prompt'),
+                ),
+              ),
             ],
           )),
         ),
@@ -182,8 +189,11 @@ class _UpdateMatchScreenState extends State<UpdateMatchScreen> {
   }
 
   void _copyTeamDetailsToClipboard() {
+    // final data =
+    //     'Dự đoán tỷ lệ cược (Decimal Odds) cho tôi trận đấu sau ${widget.sport.homeTeamName} vs ${widget.sport.awayTeamName} - ${widget.sport.matchLeague} - ${DateFormat('yyyy-MM-dd HH:mm').format(widget.sport.matchDate)}';
     final data =
-        'Chuyên gia dự đoán tỷ số trận đấu giữa ${widget.sport.homeTeamName} vs ${widget.sport.awayTeamName} - ${widget.sport.matchLeague} - ${DateFormat('yyyy-MM-dd HH:mm').format(widget.sport.matchDate)}';
+        '${widget.sport.homeTeamName} vs ${widget.sport.awayTeamName}';
+    
     Clipboard.setData(ClipboardData(text: data));
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Copied to clipboard')),

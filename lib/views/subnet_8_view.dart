@@ -87,21 +87,29 @@ class _MyAppState extends State<TradeCoinScreen> {
                 onSaved: (value) => _chooseCoin = value!,
               ),
               const SizedBox(height: 20),
-              DropdownButtonFormField<double>(
+              // DropdownButtonFormField<double>(
+              //   decoration: const InputDecoration(labelText: 'Leverage'),
+              //   value: _chooseLeverage,
+              //   items: _leverages
+              //       .map((leverage) => DropdownMenuItem(
+              //             value: leverage,
+              //             child: Text(leverage.toString()),
+              //           ))
+              //       .toList(),
+              //   onChanged: (value) {
+              //     setState(() {
+              //       _chooseLeverage = value!;
+              //     });
+              //   },
+              //   onSaved: (value) => _chooseLeverage = value!,
+              // ),
+
+              TextFormField(
                 decoration: const InputDecoration(labelText: 'Leverage'),
-                value: _chooseLeverage,
-                items: _leverages
-                    .map((leverage) => DropdownMenuItem(
-                          value: leverage,
-                          child: Text(leverage.toString()),
-                        ))
-                    .toList(),
-                onChanged: (value) {
-                  setState(() {
-                    _chooseLeverage = value!;
-                  });
-                },
-                onSaved: (value) => _chooseLeverage = value!,
+                initialValue: '0.1',
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
+                onSaved: (value) => _chooseLeverage = double.tryParse(value ?? '') ?? 0.05,
               ),
               const SizedBox(height: 50),
               Center(
